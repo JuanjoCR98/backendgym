@@ -32,6 +32,11 @@ class Estadistica
      */
     private $imc;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Socio::class, inversedBy="estadisticas")
+     */
+    private $socio;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,18 @@ class Estadistica
     public function setImc(?float $imc): self
     {
         $this->imc = $imc;
+
+        return $this;
+    }
+
+    public function getSocio(): ?Socio
+    {
+        return $this->socio;
+    }
+
+    public function setSocio(?Socio $socio): self
+    {
+        $this->socio = $socio;
 
         return $this;
     }

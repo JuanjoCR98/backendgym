@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EjercicioRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,6 +39,16 @@ class Ejercicio
      * @ORM\JoinColumn(nullable=false)
      */
     private $tipoEjercicio;
+
+    /**
+     * @ORM\OneToMany(targetEntity=EjerciciosRutina::class, mappedBy="ejercicio", orphanRemoval=true)
+     */
+    private $ejerciciosRutina;
+
+    public function __construct()
+    {
+        $this->ejerciciosRutina = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -87,6 +99,36 @@ class Ejercicio
     public function setTipoEjercicio(?TipoEjercicio $tipoEjercicio): self
     {
         $this->tipoEjercicio = $tipoEjercicio;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|EjerciciosRutina[]
+     */
+    public function getEjerciciosRutina(): Collection
+    {
+        return $this->ejerciciosRutina;
+    }
+
+    public function addEjerciciosRutina(EjerciciosRutina $ejerciciosRutina): self
+    {
+        if (!$this->ejerciciosRutina->contains($ejerciciosRutina)) {
+            $this->ejerciciosRutina[] = $ejerciciosRutina;
+            $ejerciciosRutina->setEjercicio($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEjerciciosRutina(EjerciciosRutina $ejerciciosRutina): self
+    {
+        if ($this->ejerciciosRutina->removeElement($ejerciciosRutina)) {
+            // set the owning side to null (unless already changed)
+            if ($ejerciciosRutina->getEjercicio() === $this) {
+                $ejerciciosRutina->setEjercicio(null);
+            }
+        }
 
         return $this;
     }

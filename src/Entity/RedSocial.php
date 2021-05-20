@@ -32,6 +32,11 @@ class RedSocial
      */
     private $twitter;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Empleado::class, mappedBy="redes_sociales", cascade={"persist", "remove"})
+     */
+    private $empleado;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,28 @@ class RedSocial
     public function setTwitter(?string $twitter): self
     {
         $this->twitter = $twitter;
+
+        return $this;
+    }
+
+    public function getEmpleado(): ?Empleado
+    {
+        return $this->empleado;
+    }
+
+    public function setEmpleado(?Empleado $empleado): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($empleado === null && $this->empleado !== null) {
+            $this->empleado->setRedesSociales(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($empleado !== null && $empleado->getRedesSociales() !== $this) {
+            $empleado->setRedesSociales($this);
+        }
+
+        $this->empleado = $empleado;
 
         return $this;
     }

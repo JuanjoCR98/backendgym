@@ -32,6 +32,18 @@ class EjerciciosRutina
      */
     private $repeticiones;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Rutina::class, inversedBy="ejerciciosRutina")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $rutina;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Ejercicio::class, inversedBy="ejerciciosRutina")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $ejercicio;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +81,30 @@ class EjerciciosRutina
     public function setRepeticiones(?int $repeticiones): self
     {
         $this->repeticiones = $repeticiones;
+
+        return $this;
+    }
+
+    public function getRutina(): ?Rutina
+    {
+        return $this->rutina;
+    }
+
+    public function setRutina(?Rutina $rutina): self
+    {
+        $this->rutina = $rutina;
+
+        return $this;
+    }
+
+    public function getEjercicio(): ?Ejercicio
+    {
+        return $this->ejercicio;
+    }
+
+    public function setEjercicio(?Ejercicio $ejercicio): self
+    {
+        $this->ejercicio = $ejercicio;
 
         return $this;
     }

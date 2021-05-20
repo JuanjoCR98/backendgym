@@ -54,6 +54,11 @@ class Empleado implements UserInterface
      */
     private $foto;
 
+    /**
+     * @ORM\OneToOne(targetEntity=RedSocial::class, inversedBy="empleado", cascade={"persist", "remove"})
+     */
+    private $redes_sociales;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -179,6 +184,18 @@ class Empleado implements UserInterface
     public function setFoto(?string $foto): self
     {
         $this->foto = $foto;
+
+        return $this;
+    }
+
+    public function getRedesSociales(): ?RedSocial
+    {
+        return $this->redes_sociales;
+    }
+
+    public function setRedesSociales(?RedSocial $redes_sociales): self
+    {
+        $this->redes_sociales = $redes_sociales;
 
         return $this;
     }
