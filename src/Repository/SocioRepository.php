@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Socio;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Socio|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,11 +15,29 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SocioRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface $manager)
     {
         parent::__construct($registry, Socio::class);
+        $this->manager = $manager;
+    }
+    
+    function saveSocio(Socio $socio)
+    {
+        $this->manager->persist($socio);
+        $this->manager->flush();
+    }
+    
+    function updateSocio(Socio $socio)
+    {
+        $this->manager->persist($socio);
+        $this->manager->flush(); 
     }
 
+    function removeSocio(Socio $socio)
+    {
+        $this->manager->remove($socio);
+        $this->manager->flush();
+    }
     // /**
     //  * @return Socio[] Returns an array of Socio objects
     //  */

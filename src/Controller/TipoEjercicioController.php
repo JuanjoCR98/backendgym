@@ -17,10 +17,26 @@ class TipoEjercicioController extends AbstractController
         $this->tipoEjercicioRepository = $tipoEjercicioRepository;
     }
 
-    /**
+     /**
      * @Route("/tipo_ejercicio", name="tipo_ejercicio" , methods={"GET"})
      */
     public function tipo_ejercicios(): JsonResponse {
+        $tipo_ejercicios = $this->tipoEjercicioRepository->findAll();
+        $data=[];
+        
+        foreach($tipo_ejercicios as $tipo){
+            $data[] = [
+                'id' => $tipo->getId(),
+                'tipo' => $tipo->getTipo()
+            ];
+        }
+        return new JsonResponse($data,Response::HTTP_OK);
+    }
+    
+    /**
+     * @Route("/tipo_ejercicio/ejercicios", name="tipo_ejercicio_ejercicios" , methods={"GET"})
+     */
+    public function tipo_ejercicios_ejercicios(): JsonResponse {
         $tipo_ejercicios = $this->tipoEjercicioRepository->findAll();
         $data=[];
         $ejercicios=[];

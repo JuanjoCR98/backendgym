@@ -22,7 +22,7 @@ class EjercicioController extends AbstractController
     /**
      * @Route("/ejercicio", name="ejercicio", methods={"GET"})
      */
-    public function ejercicios(): Response
+    public function ejercicios(): JsonResponse
     {
         $ejercicios = $this->ejercicioRepository->findAll();
 
@@ -33,7 +33,7 @@ class EjercicioController extends AbstractController
                 'nombre'=>$ejer->getNombre(),
                 'ejecucion'=>$ejer->getEjecucion(),
                 'foto'=>$ejer->getFoto(),
-                'id_tipo' => $ejer->getTipoEjercicio()->getId(),
+                'tipo_ejercicio_id' => $ejer->getTipoEjercicio()->getId(),
                 'tipo' => $ejer->getTipoEjercicio()->getTipo()
             ];
         }
