@@ -37,6 +37,11 @@ class Estadistica
      */
     private $socio;
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $fecha;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Estadistica
     public function setSocio(?Socio $socio): self
     {
         $this->socio = $socio;
+
+        return $this;
+    }
+
+    public function getFecha(): ?\DateTimeInterface
+    {
+        return $this->fecha;
+    }
+
+    public function setFecha(\DateTimeInterface $fecha): self
+    {
+        $this->fecha = $fecha;
 
         return $this;
     }
