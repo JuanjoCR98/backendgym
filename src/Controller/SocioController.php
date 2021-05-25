@@ -126,35 +126,42 @@ class SocioController extends AbstractController
         $data = json_decode($request->getContent(),true);
         
         $date = new DateTime($data["fecha_nacimiento"]);
-         
-         $existe_usuario = $this->socioRepository->findOneBy(array("email" => $data["email"]));
-         
-         if (($socio->getEmail() == $data["email"]) || $existe_usuario == null) 
-         {
-            if (!filter_var($data["email"], FILTER_VALIDATE_EMAIL)) 
-            {
-                return new JsonResponse(['error' => 'Introduzca un email válido'], Response::HTTP_PARTIAL_CONTENT);
-            } 
-            else if (strlen($data["password"]) < 4) 
-            {
-                return new JsonResponse(['error' => 'La contraseña debe de tener al menos 4 caracteres'], Response::HTTP_PARTIAL_CONTENT);
+
+        $existe_usuario = $this->socioRepository->findOneBy(array("email" => $data["email"]));
+
+        if ($socio != null) 
+        {
+            if (($socio->getEmail() == $data["email"]) || $existe_usuario == null) {
+                
+                if (!filter_var($data["email"], FILTER_VALIDATE_EMAIL)) 
+                {
+                    return new JsonResponse(['error' => 'Introduzca un email válido'], Response::HTTP_PARTIAL_CONTENT);
+                } 
+                else if (strlen($data["password"]) < 4) 
+                {
+                    return new JsonResponse(['error' => 'La contraseña debe de tener al menos 4 caracteres'], Response::HTTP_PARTIAL_CONTENT);
+                } 
+                else 
+                {
+                    empty($data["nombre"]) ? true : $socio->setNombre($data["nombre"]);
+                    empty($data["apellidos"]) ? true : $socio->setApellidos($data["apellidos"]);
+                    empty($data["fecha_nacimiento"]) ? true : $socio->setFechaNacimiento($date);
+                    empty($data["email"]) ? true : $socio->setEmail($data["email"]);
+                    empty($data["password"]) ? true : $socio->setPassword(password_hash($data["password"], PASSWORD_BCRYPT));
+
+                    $this->socioRepository->updateSocio($socio);
+
+                    return new JsonResponse(['status' => 'Se ha actualizado correctamente'], Response::HTTP_OK);
+                }
             } 
             else 
             {
-                empty($data["nombre"]) ? true : $socio->setNombre($data["nombre"]);
-                empty($data["apellidos"]) ? true : $socio->setApellidos($data["apellidos"]);
-                empty($data["fecha_nacimiento"]) ? true : $socio->setFechaNacimiento($date);
-                empty($data["email"]) ? true : $socio->setEmail($data["email"]);
-                empty($data["password"]) ? true : $socio->setPassword(password_hash($data["password"], PASSWORD_BCRYPT));
-
-                $this->socioRepository->updateSocio($socio);
-
-                return new JsonResponse(['status' => 'Se ha actualizado correctamente'], Response::HTTP_OK);
+                return new JsonResponse(['error' => 'Ya existe un socio con ese email'], Response::HTTP_PARTIAL_CONTENT);
             }
         }
-        else 
+        else
         {
-            return new JsonResponse(['error' => 'Ya existe un socio con ese email'], Response::HTTP_PARTIAL_CONTENT);
+            return new JsonResponse(["error" => "No hay ningún socio con ese id"], Response::HTTP_PARTIAL_CONTENT);
         }
     }
     

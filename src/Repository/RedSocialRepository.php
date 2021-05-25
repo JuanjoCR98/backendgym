@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\RedSocial;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 /**
  * @method RedSocial|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,11 +16,18 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RedSocialRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface $manager)
     {
         parent::__construct($registry, RedSocial::class);
+        $this->manager = $manager;
     }
 
+    
+    function saveRedSocial(RedSocial $redSocial) 
+    {
+        $this->manager->persist($redSocial);
+        $this->manager->flush();
+    }
     // /**
     //  * @return RedSocial[] Returns an array of RedSocial objects
     //  */

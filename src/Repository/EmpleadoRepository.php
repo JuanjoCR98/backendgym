@@ -8,6 +8,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 /**
  * @method Empleado|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,9 +19,28 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class EmpleadoRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
         parent::__construct($registry, Empleado::class);
+        $this->manager = $manager;
+    }
+
+    function saveEmpleado(Empleado $empleado) 
+    {
+        $this->manager->persist($empleado);
+        $this->manager->flush();
+    }
+    
+    function updateEmpleado(Empleado $empleado) 
+    {
+        $this->manager->persist($empleado);
+        $this->manager->flush();
+    }
+
+    function removeEmpleado(Empleado $empleado)
+    {
+        $this->manager->remove($empleado);
+        $this->manager->flush();
     }
 
     /**
