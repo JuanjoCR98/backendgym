@@ -54,10 +54,17 @@ class Socio
      */
     private $rutinas;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Usuario::class, inversedBy="socio", cascade={"persist", "remove"})
+     */
+    private $usuario;
+
+
     public function __construct()
     {
         $this->estadisticas = new ArrayCollection();
         $this->rutinas = new ArrayCollection();
+        $this->usuario = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,6 +188,18 @@ class Socio
                 $rutina->setSocio(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUsuario(): ?Usuario
+    {
+        return $this->usuario;
+    }
+
+    public function setUsuario(?Usuario $usuario): self
+    {
+        $this->usuario = $usuario;
 
         return $this;
     }

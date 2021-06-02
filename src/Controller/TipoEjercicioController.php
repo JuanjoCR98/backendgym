@@ -38,10 +38,12 @@ class TipoEjercicioController extends AbstractController
      */
     public function tipo_ejercicios_ejercicios(): JsonResponse {
         $tipo_ejercicios = $this->tipoEjercicioRepository->findAll();
+        
         $data=[];
-        $ejercicios=[];
-
+        
         foreach($tipo_ejercicios as $tipo){
+            $ejercicios=[];
+            
             foreach ($tipo->getEjercicios() as $ejercicio){
                $ejercicios[] = [
                    'id' => $ejercicio->getId(),
@@ -58,4 +60,29 @@ class TipoEjercicioController extends AbstractController
         }
         return new JsonResponse($data,Response::HTTP_OK);
     }
+    
+     /**
+     * @Route("/tipo_ejercicio/ejercicios/{id}", name="tipo_ejercicio_ejercicios" , methods={"GET"})
+     */
+    /*public function tipo_ejercicios_ejercicios_ejercicios(int $id): JsonResponse {
+        $tipo_ejercicios = $this->tipoEjercicioRepository->findOneBy(["id" => $id]);
+        $data=[];
+        $ejercicios=[];
+
+            foreach ($tipo_ejercicios->getEjercicios() as $ejercicio) {
+            $ejercicios[] = [
+                'id' => $ejercicio->getId(),
+                'nombre' => $ejercicio->getNombre(),
+                'ejecucion' => $ejercicio->getEjecucion(),
+                'foto' => $ejercicio->getFoto(),
+            ];
+        }
+        $data[] = [
+            'id' => $tipo_ejercicios->getId(),
+            'tipo' => $tipo_ejercicios->getTipo(),
+            'ejercicios' => $ejercicios
+        ];
+
+        return new JsonResponse($data,Response::HTTP_OK);
+    }*/
 }

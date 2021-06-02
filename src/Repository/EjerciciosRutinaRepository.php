@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\EjerciciosRutina;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method EjerciciosRutina|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,23 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class EjerciciosRutinaRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface $manager)
     {
         parent::__construct($registry, EjerciciosRutina::class);
+        $this->manager = $manager;
+    }
+   
+    
+    function saveEjercicioRutina(EjerciciosRutina $ejerciciosRutina)
+    {
+        $this->manager->persist($ejerciciosRutina);
+        $this->manager->flush();
+    }
+    
+    function removeEjercicioRutina(EjerciciosRutina $ejerciciosRutina)
+    {
+        $this->manager->remove($ejerciciosRutina);
+        $this->manager->flush();
     }
 
     // /**

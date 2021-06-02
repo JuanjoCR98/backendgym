@@ -61,10 +61,12 @@ class RutinaController extends AbstractController
         $data=[];
         
         foreach($rutinas as $rutina){
+           
             $data[] = [
                 'id' => $rutina->getId(),
                 'nombre'=>$rutina->getNombre(),
                 'fecha_creacion'=>$rutina->getFechaCreacion(),
+                
             ];
         }
         return new JsonResponse($data,Response::HTTP_OK);
@@ -72,7 +74,7 @@ class RutinaController extends AbstractController
     
     
     /**
-     * @Route("/rutina/{id}" , name="add_rutina" , methods={"POST"})
+     * @Route("/rutina/socio/{id}" , name="add_rutina" , methods={"POST"})
      */
     public function add(int $id,Request $request)
     {
@@ -85,7 +87,7 @@ class RutinaController extends AbstractController
 
         if ($socio != null) 
         {
-            if (empty($nombre) || empty($fecha_creacion)) 
+            if (empty($nombre)) 
             {
                 return new JsonResponse(['error' => 'Todos los campos son obligatorios. Introduzca todos los campos'], Response::HTTP_PARTIAL_CONTENT);
             } 

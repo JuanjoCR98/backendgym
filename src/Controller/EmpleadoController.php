@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Firebase\JWT\JWT;
 use App\Entity\Empleado;
 use App\Entity\RedSocial;
 use DateTime;
@@ -82,6 +83,43 @@ class EmpleadoController extends AbstractController
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
+    }
+    
+        /**
+     * @Route("/empleado/login", name="login", methods={"POST"})
+     */
+    public function login(Request $request) {
+        $data = json_decode($request->getContent(),true);
+        
+        $email = $data['email'];
+        $password = $data['password'];
+        
+        $empleado = $this->empleadoRepository->findOneBy(['email' => $email]);
+        
+        if(empty($email) || empty($password))
+        {
+            return new JsonResponse(['error' => 'Todos los campos son obligatorios. Introduzca todos los campos'], Response::HTTP_PARTIAL_CONTENT);   
+        }
+        else if($empleado == null)
+        {
+            return new JsonResponse(['error' => 'Empleado no válido. '], Response::HTTP_NOT_FOUND);   
+        }
+        else if(!password_verify($password, $empleado->getPassword()))
+        {
+          return new JsonResponse(['error' => 'Empleado no válido.Introduzca correctamente su email y contraseña.'], Response::HTTP_NOT_FOUND);  
+        }
+        else {
+            $payload = [
+            "user" => $empleado->getEmail(),
+            "exp" => (new \DateTime())->modify("+5 day")->getTimestamp(),
+            ];
+
+            $jwt = JWT::encode($payload, $this->getParameter('jwt_secret'), 'HS256');
+
+            return new JsonResponse([
+            'respuesta' => 'Empleado logueado correctamente',
+            'token' => $jwt,], Response::HTTP_OK);
+        }
     }
     
      /**
@@ -173,7 +211,7 @@ class EmpleadoController extends AbstractController
                     empty($data["email"]) ? true : $empleado->setEmail($data["email"]);
                     empty($data["nombre"]) ? true : $empleado->setNombre($data["nombre"]);
                     empty($data["apellidos"]) ? true : $empleado->setApellidos($data["apellidos"]);
-                    empty($data["password"]) ? true : $empleado->setPassword($data["password"]);
+                    empty($data["password"]) ? true : $empleado->setPassword(password_hash($data["password"], PASSWORD_BCRYPT));
                     empty($data["fecha_nac"]) ? true : $empleado->setFechaNac(new DateTime($data["fecha_nac"]));
                     empty($data["roles"]) ? true : $empleado->setRoles($data["roles"]);
                     empty($data["foto"]) ? true : $empleado->setFoto($data["foto"]);

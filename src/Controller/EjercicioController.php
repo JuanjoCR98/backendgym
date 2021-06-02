@@ -20,9 +20,9 @@ class EjercicioController extends AbstractController
     }
 
     /**
-     * @Route("/ejercicio", name="ejercicio", methods={"GET"})
+      * @Route("/ejercicio", name="ejercicio" , methods={"GET"})
      */
-    public function ejercicios(): JsonResponse
+    public function ejercicio(): JsonResponse
     {
         $ejercicios = $this->ejercicioRepository->findAll();
 
